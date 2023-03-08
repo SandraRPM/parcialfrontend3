@@ -1,34 +1,71 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
+import "./App.css";
+import Card from "./components/Card";
+import {useState} from 'react';
 
 function App() {
-  const [count, setCount] = useState(0)
+    const [name, setName] = useState('');
+    const [address, setAddress] = useState('');
+    const [email, setEmail] = useState('');
+    const [error, setError] = useState(false);
+    const [showCard, setShowCard] = useState(false);
+    const [formInfo, setFormInfo] = useState();
 
-  return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    const handleSubmit = (e) => {
+      e.preventDefault();
+
+      setShowCard(false);
+      
+      if (name === '' || name.length < 3 || name.startsWith(' ')) {
+        return setError(true);
+      }
+      
+      if (address === '' || address.length < 6 || address.startsWith(' ')) {
+        return setError(true);
+      }
+      
+      if (email === '' || email.length < 6 || email.startsWith(' ')) {
+        return setError(true);
+      }
+
+      setFormInfo({
+        name,
+        address, 
+        email
+      });
+
+      setName('');
+      setAddress('');
+      setEmail('');
+
+      setShowCard(true);
+      setError(false);
+     
+    }
+
+
+    return (
+      <div className="App">
+        <h1> Informacion del estudiantes </h1>
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label htmlFor="name">Nombre estudiante</label>
+            <input id="name" name="name" value={name}  onChange={(event) => setName(event.target.value)} />
+          </div>        
+          <div className="form-group">
+            <label htmlFor="address">Dirección</label>
+            <input id="address" name="address" value={address}  onChange={(event) => setAddress(event.target.value)} />
+          </div>        
+          <div className="form-group">
+            <label htmlFor="email">correo electronico</label>
+            <input id="email" name="email" value={email} onChange={(event) => setEmail(event.target.value)} />
+          </div>
+          <button type="submit" className="btn">Enviar</button>
+        </form>
+        {error && <p>Por favor ingresa toda la información</p>}
+        {showCard && <Card name={formInfo.name} address={formInfo.address} email={formInfo.email}/>}
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </div>
-  )
+    );
 }
 
-export default App
+export default App;
+
